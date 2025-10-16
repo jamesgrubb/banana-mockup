@@ -10,15 +10,18 @@ export const generateMockup = async (
   style: MockupStyle
 ): Promise<string> => {
   try {
-    const prompt = `Task: Create a photorealistic mockup.
-Input: The user has provided an image of a ${imageType}.
-Style: Generate the mockup in a ${style} aesthetic.
+    const prompt = `Task: Create a photorealistic mockup by placing the user's provided design into a styled environment.
 
-CRITICAL INSTRUCTIONS:
-1.  **Color Accuracy**: This is the most important rule. The colors of the user's original design must be preserved with 100% accuracy. Do NOT apply any color grading, filters, or tints from the background lighting to the user's design. The colors in the mockup must be an exact match to the colors in the provided image.
-2.  **Fidelity**: The original design, including all text, logos, and graphics, must be rendered perfectly without any distortion, alteration, or change in aspect ratio.
-3.  **Realism**: The mockup must look like a real photograph. The background, lighting, and shadows should be realistic and complement the requested style, but they must NOT affect the colors of the user's design itself.
-4.  **Composition**: Place the ${imageType} at a natural, slightly angled view on a clean, uncluttered background.`;
+User's Design: An image of a ${imageType}.
+Environment Style: Create a background scene that is ${style}.
+
+**CORE CONCEPT**: You are placing a real, physical object (the user's design) into a photorealistic scene. The scene has lighting and a style, but the physical object itself does NOT change color. It should look like a brand new, freshly printed item.
+
+**CRITICAL RULES**:
+1.  **ABSOLUTE COLOR FIDELITY**: The user's design (the ${imageType}) MUST retain its original colors perfectly. Do NOT, under any circumstances, apply color filters, tints, or color grading from the environment's style (e.g., no sepia/yellow tint for a vintage style) to the user's design. The design's colors are non-negotiable and must be an exact match to the input image.
+2.  **PERFECT CONTENT REPRODUCTION**: All text, logos, and graphics from the user's design must be rendered with perfect clarity and accuracy. No distortion, no changes.
+3.  **REALISTIC INTEGRATION**: The user's design should be realistically integrated into the scene. This means accurate perspective, lighting, and shadows *on* the object. For example, if there's a light source from the left, the left side of the book might be brighter and it might cast a shadow to the right. This is acceptable, but the *base colors* of the book itself must not change.
+4.  **BACKGROUND COMPOSITION**: The background should be clean, uncluttered, and perfectly match the requested '${style}' theme.`;
 
 
     const response = await ai.models.generateContent({
