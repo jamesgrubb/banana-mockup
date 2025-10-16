@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { ImageType, MockupStyle } from './types';
+import { ImageType, MockupStyle, DesignType } from './types';
 import { MOCKUP_STYLES } from './constants';
 import { generateMockup, removePersonFromImage } from './services/geminiService';
 import Header from './components/Header';
@@ -7,6 +7,7 @@ import ImageUploader from './components/ImageUploader';
 import StyleSelector from './components/StyleSelector';
 import MockupDisplay from './components/MockupDisplay';
 import Toast from './components/Toast';
+import DesignTypeSelector from './components/DesignTypeSelector';
 
 const fileToBase64 = (file: File): Promise<string> =>
   new Promise((resolve, reject) => {
@@ -24,6 +25,7 @@ const App: React.FC = () => {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
   const [imageType, setImageType] = useState<ImageType | null>(null);
+  const [selectedDesignType, setSelectedDesignType] = useState<DesignType | null>(null);
   const [selectedStyle, setSelectedStyle] = useState<MockupStyle>(MockupStyle.MODERN);
   const [generatedMockup, setGeneratedMockup] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -38,6 +40,8 @@ const App: React.FC = () => {
     setGeneratedMockup(null);
     setError(null);
     setShowImageRepairOption(false);
+    setImageType(null);
+    setSelectedDesignType(null);
 
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -70,8 +74,8 @@ const App: React.FC = () => {
       triggerToast("Please upload an image first.");
       return;
     }
-    if (!imageType) {
-      triggerToast("Could not determine image type.");
+    if (!imageType || !selectedDesignType) {
+      triggerToast("Please select the design type (Book/Brochure).");
       return;
     }
 
@@ -88,6 +92,7 @@ const App: React.FC = () => {
         base64Image,
         mimeType,
         imageType,
+        selectedDesignType,
         selectedStyle
       );
       setGeneratedMockup(`data:image/png;base64,${generatedImageBase64}`);
@@ -150,16 +155,22 @@ const App: React.FC = () => {
               previewUrl={imagePreviewUrl}
               imageType={imageType}
             />
+            {imageType && (
+              <DesignTypeSelector 
+                selectedType={selectedDesignType}
+                onSelectType={setSelectedDesignType}
+              />
+            )}
             <StyleSelector
               styles={MOCKUP_STYLES}
               selectedStyle={selectedStyle}
               onStyleSelect={setSelectedStyle}
-              disabled={!uploadedFile}
+              disabled={!uploadedFile || !selectedDesignType}
             />
             <div className="flex flex-col gap-4">
               <button
                 onClick={() => handleGenerateClick()}
-                disabled={!uploadedFile || isLoading || isRepairing}
+                disabled={!uploadedFile || !selectedDesignType || isLoading || isRepairing}
                 className="w-full flex items-center justify-center gap-2 bg-indigo-600 text-white font-bold py-4 px-6 rounded-lg shadow-lg hover:bg-indigo-700 disabled:bg-gray-600 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-105 disabled:scale-100"
               >
                 {isLoading ? (

@@ -1,5 +1,5 @@
 import { GoogleGenAI, Modality } from "@google/genai";
-import { ImageType, MockupStyle } from '../types';
+import { ImageType, MockupStyle, DesignType } from '../types';
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
 
@@ -7,18 +7,20 @@ export const generateMockup = async (
   base64ImageData: string,
   mimeType: string,
   imageType: ImageType,
+  designType: DesignType,
   style: MockupStyle
 ): Promise<string> => {
   try {
+    const fullDesignType = `${designType} ${imageType}`;
     const prompt = `Task: Create a photorealistic mockup by placing the user's provided design into a styled environment.
 
-User's Design: An image of a ${imageType}.
+User's Design: An image of a ${fullDesignType}.
 Environment Style: Create a background scene that is ${style}.
 
 **CORE CONCEPT**: You are placing a real, physical object (the user's design) into a photorealistic scene. The scene has lighting and a style, but the physical object itself does NOT change color. It should look like a brand new, freshly printed item.
 
 **CRITICAL RULES**:
-1.  **ABSOLUTE COLOR FIDELITY**: The user's design (the ${imageType}) MUST retain its original colors perfectly. Do NOT, under any circumstances, apply color filters, tints, or color grading from the environment's style (e.g., no sepia/yellow tint for a vintage style) to the user's design. The design's colors are non-negotiable and must be an exact match to the input image.
+1.  **ABSOLUTE COLOR FIDELITY**: The user's design (the ${fullDesignType}) MUST retain its original colors perfectly. Do NOT, under any circumstances, apply color filters, tints, or color grading from the environment's style (e.g., no sepia/yellow tint for a vintage style) to the user's design. The design's colors are non-negotiable and must be an exact match to the input image.
 2.  **PERFECT CONTENT REPRODUCTION**: All text, logos, and graphics from the user's design must be rendered with perfect clarity and accuracy. No distortion, no changes.
 3.  **REALISTIC INTEGRATION**: The user's design should be realistically integrated into the scene. This means accurate perspective, lighting, and shadows *on* the object. For example, if there's a light source from the left, the left side of the book might be brighter and it might cast a shadow to the right. This is acceptable, but the *base colors* of the book itself must not change.
 4.  **BACKGROUND COMPOSITION**: The background should be clean, uncluttered, and perfectly match the requested '${style}' theme.`;

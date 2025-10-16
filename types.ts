@@ -1,6 +1,11 @@
 export enum ImageType {
-  COVER = 'book or brochure cover',
-  SPREAD = 'open book or brochure spread',
+  COVER = 'cover',
+  SPREAD = 'spread',
+}
+
+export enum DesignType {
+  BOOK = 'book',
+  BROCHURE = 'brochure',
 }
 
 export enum MockupStyle {

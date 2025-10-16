@@ -1,4 +1,3 @@
-
 import React, { useRef } from 'react';
 
 interface ImageUploaderProps {
@@ -49,7 +48,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageUpload, previewUrl
       </div>
       {imageType && (
         <div className="mt-4 text-center bg-gray-700 text-indigo-300 text-sm font-medium py-2 px-4 rounded-full">
-          Detected Type: <span className="font-bold capitalize">{imageType}</span>
+          Detected Format: <span className="font-bold capitalize">{imageType}</span>
         </div>
       )}
     </div>
