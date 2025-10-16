@@ -14,10 +14,11 @@ export const generateMockup = async (
 Input: The user has provided an image of a ${imageType}.
 Style: Generate the mockup in a ${style} aesthetic.
 
-Key requirements:
-- Realism: The mockup must look like a real photograph. Use natural lighting, soft shadows, and realistic material textures (e.g., paper grain, glossy or matte finish).
-- Fidelity: The original design from the user's image must be preserved perfectly. Do not alter text, colors, or the aspect ratio.
-- Perspective & Composition: Place the ${imageType} at a natural, slightly angled view on a clean, uncluttered background that complements the requested style.`;
+CRITICAL INSTRUCTIONS:
+1.  **Color Accuracy**: This is the most important rule. The colors of the user's original design must be preserved with 100% accuracy. Do NOT apply any color grading, filters, or tints from the background lighting to the user's design. The colors in the mockup must be an exact match to the colors in the provided image.
+2.  **Fidelity**: The original design, including all text, logos, and graphics, must be rendered perfectly without any distortion, alteration, or change in aspect ratio.
+3.  **Realism**: The mockup must look like a real photograph. The background, lighting, and shadows should be realistic and complement the requested style, but they must NOT affect the colors of the user's design itself.
+4.  **Composition**: Place the ${imageType} at a natural, slightly angled view on a clean, uncluttered background.`;
 
 
     const response = await ai.models.generateContent({
